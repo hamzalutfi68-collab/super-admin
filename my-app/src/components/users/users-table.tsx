@@ -1,23 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, Search, Filter, Edit, Trash, UserCheck, Shield } from "lucide-react";
 import { Badge } from "@/components/ui/badge"; // Assuming you have a badge component, or use Tailwind directly
@@ -55,15 +55,15 @@ export function UsersTable() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="relative">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
             <Input
               placeholder="Search users..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-8 w-[300px]"
+              className="pl-10 w-[300px] bg-gray-50 dark:bg-gray-900/50 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white"
             />
           </div>
-          <Button variant="outline" className="flex gap-2">
+          <Button variant="outline" className="flex gap-2 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-white/5 text-gray-700 dark:text-gray-300">
             <Filter className="h-4 w-4" />
             Filter
           </Button>
@@ -71,101 +71,100 @@ export function UsersTable() {
       </div>
 
       {/* The Table */}
-      <div className="rounded-md border bg-white shadow-sm">
+      <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 backdrop-blur-xl shadow-sm dark:shadow-lg overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50/50">
-              <TableHead className="w-[250px]">User</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Last Active</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+            <TableRow className="bg-gray-50 dark:bg-white/5 border-b border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10">
+              <TableHead className="w-[250px] text-gray-700 dark:text-gray-300 font-semibold">User</TableHead>
+              <TableHead className="text-gray-700 dark:text-gray-300 font-semibold">Role</TableHead>
+              <TableHead className="text-gray-700 dark:text-gray-300 font-semibold">Status</TableHead>
+              <TableHead className="text-gray-700 dark:text-gray-300 font-semibold">Last Active</TableHead>
+              <TableHead className="text-right text-gray-700 dark:text-gray-300 font-semibold">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredUsers.length === 0 ? (
-                <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center">
-                        No results found.
-                    </TableCell>
-                </TableRow>
+              <TableRow>
+                <TableCell colSpan={5} className="h-24 text-center">
+                  No results found.
+                </TableCell>
+              </TableRow>
             ) : (
-                filteredUsers.map((user) => (
-                <TableRow key={user.id}>
-                    {/* User Info Column */}
-                    <TableCell>
+              filteredUsers.map((user) => (
+                <TableRow key={user.id} className="border-b border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                  {/* User Info Column */}
+                  <TableCell>
                     <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-blue-700 font-semibold text-xs">
-                            {user.name.charAt(0)}
-                        </div>
-                        <div>
-                            <p className="font-medium text-sm text-gray-900">{user.name}</p>
-                            <p className="text-xs text-gray-500">{user.email}</p>
-                        </div>
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white font-semibold text-sm shadow-lg shadow-blue-500/30">
+                        {user.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-sm text-gray-900 dark:text-white">{user.name}</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">{user.email}</p>
+                      </div>
                     </div>
-                    </TableCell>
+                  </TableCell>
 
-                    {/* Role Column */}
-                    <TableCell>
+                  {/* Role Column */}
+                  <TableCell>
                     <div className="flex items-center gap-2">
-                        {user.role === "Super Admin" && <Shield className="h-3 w-3 text-indigo-500" />}
-                        <span className="text-sm text-gray-600">{user.role}</span>
+                      {user.role === "Super Admin" && <Shield className="h-4 w-4 text-blue-500" />}
+                      <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">{user.role}</span>
                     </div>
-                    </TableCell>
+                  </TableCell>
 
-                    {/* Status Column */}
-                    <TableCell>
+                  {/* Status Column */}
+                  <TableCell>
                     <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                        user.status === "Active"
-                            ? "bg-green-100 text-green-800"
-                            : user.status === "Inactive"
+                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${user.status === "Active"
+                          ? "bg-green-100 text-green-800"
+                          : user.status === "Inactive"
                             ? "bg-gray-100 text-gray-800"
                             : "bg-yellow-100 text-yellow-800"
                         }`}
                     >
-                        {user.status}
+                      {user.status}
                     </span>
-                    </TableCell>
+                  </TableCell>
 
-                    {/* Last Active Column */}
-                    <TableCell className="text-gray-500 text-sm">{user.lastActive}</TableCell>
+                  {/* Last Active Column */}
+                  <TableCell className="text-gray-600 dark:text-gray-400 text-sm">{user.lastActive}</TableCell>
 
-                    {/* Actions Column */}
-                    <TableCell className="text-right">
+                  {/* Actions Column */}
+                  <TableCell className="text-right">
                     <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
+                      <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
+                          <span className="sr-only">Open menu</span>
+                          <MoreHorizontal className="h-4 w-4" />
                         </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem>
-                            <UserCheck className="mr-2 h-4 w-4" /> View Details
+                          <UserCheck className="mr-2 h-4 w-4" /> View Details
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                            <Edit className="mr-2 h-4 w-4" /> Edit User
+                          <Edit className="mr-2 h-4 w-4" /> Edit User
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="text-red-600 focus:text-red-600">
-                            <Trash className="mr-2 h-4 w-4" /> Delete User
+                          <Trash className="mr-2 h-4 w-4" /> Delete User
                         </DropdownMenuItem>
-                        </DropdownMenuContent>
+                      </DropdownMenuContent>
                     </DropdownMenu>
-                    </TableCell>
+                  </TableCell>
                 </TableRow>
-                ))
+              ))
             )}
           </TableBody>
         </Table>
       </div>
-      
+
       {/* Simple Pagination */}
       <div className="flex items-center justify-end space-x-2 py-4">
-        <Button variant="outline" size="sm" disabled>Previous</Button>
-        <Button variant="outline" size="sm">Next</Button>
+        <Button variant="outline" size="sm" disabled className="border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300">Previous</Button>
+        <Button variant="outline" size="sm" className="border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-white/5 text-gray-700 dark:text-gray-300">Next</Button>
       </div>
     </div>
   );

@@ -9,22 +9,41 @@ export const loginApiMethod = async ({
   password: string;
 }) => {
   try {
-    // نفترض endpoint /login يرجع { token: "..." , user: { ... } } أو على الأقل { token }
-    const { data } = await apiClient.post("/login", { email, password });
+    // 1. استدعاء السيرفر
+    const response = await apiClient.post("auth/login", { email, password });
+    
+    // axios يضع الرد الفعلي داخل .data، والباك إند يضع البيانات داخل .data أيضاً
+    const serverResponse = response.data; 
 
-    // تأكد أن السيرفر يرجع token
-    const token = data?.token ?? data?.accessToken ?? null;
-    if (!token) throw new Error("No token returned from server");
+    // 2. استخراج التوكن (الحل هنا 👇)
+    // نبحث عنه داخل data.data.accessToken لأن الباك إند وضعه داخل كائن
+    const token = 
+      serverResponse?.data?.accessToken ?? // الاحتمال الأقوى بناءً على ApiResponse
+      serverResponse?.accessToken ??       // احتمال احتياطي
+      serverResponse?.token ??             // احتمال احتياطي آخر
+      null;
 
-    // خزن التوكن (خيار بسيط — لاحقاً أذكر البديل الآمن)
+    if (!token) {
+        console.log("Full Server Response:", serverResponse); // للطباعة في حال الفشل
+        throw new Error("No token returned from server");
+    }
+
+    // 3. تخزين التوكن
     localStorage.setItem("@auth_token", token);
+    
+    // يفضل تخزين الـ User أيضاً إذا كنت تحتاجه
+    if (serverResponse?.data?.user) {
+        localStorage.setItem("@auth_user", JSON.stringify(serverResponse.data.user));
+    }
 
     toast("Logged in successfully");
-    return { token, raw: data };
+    
+    // إرجاع التوكن ليستخدمه الـ Form
+    return { token, raw: serverResponse };
+
   } catch (error: any) {
-    // لو ApiError من interceptor رح يكون شكله ApiError
-    const message = error?.message ?? "Login failed";
+    const message = error?.response?.data?.message ?? error?.message ?? "Login failed";
     toast.error(message);
-    throw error; // أعد رمي الخطأ عشان الفورم يعرف أنه فشل
+    throw error;
   }
 };
