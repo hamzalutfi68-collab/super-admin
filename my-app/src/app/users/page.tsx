@@ -1,13 +1,24 @@
 "use client";
 
+import { useState } from "react";
 import { UsersTable } from "@/components/users/users-table";
 import { Button } from "@/components/ui/button";
 import { Plus, Users, UserCheck, UserPlus, ShieldAlert, Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import AddUserForm from "@/components/forms/add-user-form";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function UsersPage() {
   const { t } = useLanguage();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
     <div className="space-y-8">
@@ -27,10 +38,24 @@ export default function UsersPage() {
             <Download className="mr-2 h-4 w-4" />
             {t("users.exportCSV")}
           </Button>
-          <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/50 hover:scale-105 transition-all duration-200">
-            <Plus className="mr-2 h-4 w-4" />
-            {t("users.addUser")}
-          </Button>
+
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/50 hover:scale-105 transition-all duration-200">
+                <Plus className="mr-2 h-4 w-4" />
+                {t("users.addUser")}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle className="text-2xl">{t("userForm.title")}</DialogTitle>
+                <DialogDescription>
+                  {t("userForm.description")}
+                </DialogDescription>
+              </DialogHeader>
+              <AddUserForm onSuccess={() => setIsDialogOpen(false)} />
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
